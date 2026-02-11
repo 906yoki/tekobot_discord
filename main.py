@@ -8,6 +8,7 @@ import asyncio
 from flask import Flask
 from threading import Thread
 import time
+import sys
 
 # Конфигурация
 DANBOORU_URL = "https://danbooru.donmai.us/posts.json"
@@ -54,7 +55,7 @@ RATING = "safe"
 TAGS = "1girl solo"
 LAST_POST_FILE = "last_checked.json"
 ARTIST_COOLDOWN_FILE = "artist_cooldowns.json"
-COOLDOWN_HOURS = 1  # Время задержки между постами одного художника
+COOLDOWN_HOURS = 1
 
 intents = disnake.Intents.default()
 intents.message_content = True
@@ -69,7 +70,15 @@ def home():
 
 @app.route('/health')
 def health():
-    return {"status": "ok", "bot": str(bot.user) if bot.user else "not_ready", "platform": "Railway"}
+    # Проверяем статус бота
+    bot_status = "ready" if hasattr(bot, 'user') and bot.user else "starting"
+    return {
+        "status": "ok", 
+        "bot": str(bot.user) if bot.user else "not_ready",
+        "bot_status": bot_status,
+        "platform": "Railway",
+        "timestamp": datetime.now().isoformat()
+    }
 
 def run_flask():
     """Запускает Flask на порту от Railway"""
@@ -84,9 +93,8 @@ def run_flask():
     if railway_url:
         print(f"🌍 Railway URL: {railway_url}")
         print(f"🔗 Health Check: {railway_url}/health")
-    else:
-        print("ℹ️  Railway URL не найден, используется внутренний порт")
     
+    # Запускаем Flask сразу
     app.run(host=host, port=port, threaded=True)
 
 def keep_alive():
@@ -96,6 +104,7 @@ def keep_alive():
     return flask_thread
 
 class DanbooruBot(commands.Cog):
+
     def __init__(self, bot):
         self.bot = bot
         self.session = None
@@ -532,7 +541,7 @@ class DanbooruBot(commands.Cog):
         await inter.response.send_message(embed=embed, ephemeral=True)
 
     @commands.slash_command(name="info", description="Информация о боте")
-    async def bot_info(self, inter: disnake.ApplicationCommandInteraction):
+    async def show_info(self, inter: disnake.ApplicationCommandInteraction):  # ИЗМЕНИЛ ИМЯ С bot_info НА show_info
         """Информация о боте"""
         embed = disnake.Embed(
             title="🤖 Информация о боте",
@@ -564,25 +573,32 @@ async def on_ready():
     await bot.change_presence(activity=disnake.Activity(
         type=disnake.ActivityType.watching, name="by seomt | Railway"))
 
-# ... весь код как в способе 2 до if __name__ == "__main__" ...
-
 # Основной запуск
 if __name__ == "__main__":
-    print("🚂 Запуск на Railway...")
+    print("=" * 50)
+    print("🚂 Запуск бота на Railway")
+    print("=" * 50)
     
-    # 1. Сначала запускаем Flask
-    keep_alive()
+    # Сначала запускаем Flask сервер
+    print("\n1. Запуск Flask сервера...")
+    flask_thread = keep_alive()
     
-    # 2. Ждем чтобы Railway увидел что сервер запущен
-    print("⏳ Ожидание запуска Flask для health check...")
-    time.sleep(10)
+    # Ждем немного чтобы Flask точно запустился
+    print("2. Ожидание запуска Flask...")
+    time.sleep(5)
     
-    # 3. Запускаем Discord бота
+    # Теперь запускаем Discord бота
+    print("3. Загрузка Discord бота...")
     bot.add_cog(DanbooruBot(bot))
     
-    # 4. Запускаем бота (это блокирующая операция)
-    print("🤖 Запуск Discord бота...")
+    print("4. Запуск Discord бота...")
+    
     try:
         bot.run(DISCORD_TOKEN)
     except Exception as e:
-        print(f"❌ Ошибка: {e}")
+        print(f"❌ Критическая ошибка: {e}")
+        print("Проверьте на Railway:")
+        print("1. Правильность DISCORD_TOKEN в Variables")
+        print("2. Бот приглашен на сервер")
+        print("3. Разрешения бота корректны")
+        sys.exit(1)
