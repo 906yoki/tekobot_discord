@@ -572,7 +572,7 @@ async def on_ready():
     print(f"✅ Бот {bot.user} успешно запущен и готов!")
 
     await bot.change_presence(activity=disnake.Activity(
-        type=disnake.ActivityType.watching, name="by seomt | Railway"))
+        type=disnake.ActivityType.watching, name="by seomt"))
 
 # Основной запуск
 if __name__ == "__main__":
