@@ -541,8 +541,8 @@ class DanbooruBot(commands.Cog):
         await inter.response.send_message(embed=embed, ephemeral=True)
 
     @commands.slash_command(name="status",
-                            description="Показать статус бота")
-    async def bot_status(self, inter: disnake.ApplicationCommandInteraction):
+                        description="Показать статус бота")
+    async def show_status(self, inter: disnake.ApplicationCommandInteraction):  # ИЗМЕНИЛ bot_status НА show_status
         """Показать статус бота"""
         embed = disnake.Embed(
             title="🤖 Статус бота",
