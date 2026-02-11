@@ -280,7 +280,7 @@ class DanbooruBot(commands.Cog):
             except:
                 pass
 
-        embed.set_footer(text=f"Tekobot by seomt | Railway")
+        embed.set_footer(text=f"Tekobot by seomt")
 
         return embed
 
