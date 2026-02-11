@@ -19,5 +19,5 @@ COPY . .
 RUN useradd -m -u 1000 botuser && chown -R botuser:botuser /app
 USER botuser
 
-# Запуск приложения
-CMD ["python", "main.py"]
+# Запуск приложения с задержкой перед health check
+CMD ["sh", "-c", "python main.py & sleep 10 && tail -f /dev/null"]
