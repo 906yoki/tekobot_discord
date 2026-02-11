@@ -489,7 +489,7 @@ class DanbooruBot(commands.Cog):
                                   timestamp=datetime.now())
             embed.set_footer(
                 text=
-                f"Всего: {len(self.artist_cooldowns)} | КД: {COOLDOWN_HOURS} часа | Railway"
+                f"Всего: {len(self.artist_cooldowns)} | КД: {COOLDOWN_HOURS} часа"
             )
             await inter.followup.send(embed=embed)
         else:
