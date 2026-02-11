@@ -540,11 +540,12 @@ class DanbooruBot(commands.Cog):
 
         await inter.response.send_message(embed=embed, ephemeral=True)
 
-    @commands.slash_command(name="info", description="Информация о боте")
-    async def show_info(self, inter: disnake.ApplicationCommandInteraction):  # ИЗМЕНИЛ ИМЯ С bot_info НА show_info
-        """Информация о боте"""
+    @commands.slash_command(name="status",
+                            description="Показать статус бота")
+    async def bot_status(self, inter: disnake.ApplicationCommandInteraction):
+        """Показать статус бота"""
         embed = disnake.Embed(
-            title="🤖 Информация о боте",
+            title="🤖 Статус бота",
             description="Бот для автоматической публикации артов с Danbooru",
             color=disnake.Color.blue(),
             timestamp=datetime.now()
