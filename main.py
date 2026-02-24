@@ -280,7 +280,7 @@ class DanbooruBot(commands.Cog):
             except:
                 pass
 
-        embed.set_footer(text=f"Tekobot by seomt")
+        embed.set_footer(text=f"Tekobot by etivh//eoseq")
 
         return embed
 
@@ -562,7 +562,7 @@ class DanbooruBot(commands.Cog):
         embed.add_field(name="👨‍🎨 В кд", value=f"{len(self.artist_cooldowns)} художников", inline=True)
         embed.add_field(name="🆔 Последний ID", value=str(self.last_checked_id), inline=True)
         
-        embed.set_footer(text="Tekobot by seomt")
+        embed.set_footer(text="Tekobot by etivh//eoseq")
         
         await inter.response.send_message(embed=embed, ephemeral=True)
 
@@ -572,7 +572,7 @@ async def on_ready():
     print(f"✅ Бот {bot.user} успешно запущен и готов!")
 
     await bot.change_presence(activity=disnake.Activity(
-        type=disnake.ActivityType.watching, name="by seomt"))
+        type=disnake.ActivityType.watching, name="by etivh//eoseq"))
 
 # Основной запуск
 if __name__ == "__main__":
